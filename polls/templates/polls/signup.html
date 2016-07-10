@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+	<link rel="stylesheet" type="text/css" href="{% static 'polls/css/detail.css' %}">
+	<body>
+	<div class="header">
+		<span id="title">PoLLsApp</span>
+	</div>
+		<form>	
+			<div class="page">
+				<div class="fheader">
+					<h2>SIGN UP</h2>	
+				</div>
+				<div class="div1">
+					<div class="div1a">
+						First name: 
+					</div>
+					<input type="text" class="placeholder" name="firstname" placeholder="First name"><br>
+				</div>
+				<div class="div1">
+					<div class="div1a">
+						Last name: 
+					</div>
+					<input type="text" class="placeholder" name="lastname" placeholder="Last name"><br>
+				</div>
+				<div class="div1">
+					<div class="div1a">
+						Username: 
+					</div>
+					<input type="text" class="placeholder" name="Username" placeholder="Username"><br>
+				</div>
+				<div class="div1">
+					<div class="div1a">
+						Password: 
+					</div>
+					<input type="password" class="placeholder" name="Password" placeholder="Password"><br>
+				</div>
+				<div class="div1">
+					<div class="div1a">
+						Password: 
+					</div>
+					<input type="email" class="placeholder" name="email" placeholder="Password"><br>
+				</div>
+				<br>
+
+				<div>
+					<span class="c2">
+						<input type="radio" name="gender" value="Male">Male
+					</span>
+					<span class="c3">
+						<input type="radio" name="gender" value="Female">Female<br>
+					</span>
+				</div>
+				<br>
+				<div class="c4">
+					<button class="button" type="button" value="help" onclick="alert('Fill in your details in the space provided and then click Sign Up')">Help?</button>
+					<button class="button" type="submit" value="Sign Up" onclick="alert('Thank You!')">Sign Up</button>
+				</div>
+			</div>
+			<div>Already a user?</div>
+		</form>
+	</body>
+</html>
