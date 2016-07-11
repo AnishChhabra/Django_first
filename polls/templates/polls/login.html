@@ -1,10 +1,11 @@
-<<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 	<body>
 		<div class="header">
 			<span id="title">PoLLsApp</span>
 		</div>
-		<form>
+		<form action="{% url 'polls:user_auth' %}" method="POST">
+		    {% csrf_token %}
 			<div class="fheader">
 				<h2>Log In</h2>	
 			</div>
@@ -20,7 +21,9 @@
 				</div>
 				<input type="password" class="placeholder" name="Password" placeholder="Password"><br>
 			</div>	
-			<button class="button" value="Log In" name="login">Log In</button>
+			<input type="submit" class="button" value="Log In" name="login">Log In</input>
 		</form>
+		{% csrf_token %}
+		<div><a href="{% url 'polls:signup' %}">Don't have an account?</a></div>
 	</body>
 </html>
