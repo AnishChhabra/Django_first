@@ -1,9 +1,14 @@
 <!DOCTYPE html>
 <html>
 	<body>
+		{% load staticfiles %}
+
+		<link rel="stylesheet" type="text/css" href="{% static 'polls/css/signup.css' %}">
+
 		<div class="header">
 			<span id="title">PoLLsApp</span>
 		</div>
+		
 		<form action="{% url 'polls:user_auth' %}" method="POST">
 		    {% csrf_token %}
 			<div class="fheader">
@@ -21,7 +26,7 @@
 				</div>
 				<input type="password" class="placeholder" name="Password" placeholder="Password"><br>
 			</div>	
-			<input type="submit" class="button" value="Log In" name="login">Log In</input>
+			<input type="submit" class="button" value="Log In" name="login"></input>
 		</form>
 		{% csrf_token %}
 		<div><a href="{% url 'polls:signup' %}">Don't have an account?</a></div>

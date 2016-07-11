@@ -45,6 +45,14 @@ urlpatterns = [
     	views.check_pw,
     	name='check_pw'
     ),
+    url(r'^edit/$',
+    	views.edit,
+    	name='edit'
+    ),
+    url(r'^save_changes/$',
+    	views.save_changes,
+    	name='save_changes'
+    ),
     url(r'^log_out/$',
     	views.log_out,
     	name='log_out'

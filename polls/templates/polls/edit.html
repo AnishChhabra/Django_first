@@ -12,49 +12,55 @@
 
 		<div class="menu">
 			<div class="option">
-			{% csrf_token %}	
+			{% csrf_token %}
 				<a href="{% url 'polls:index' %}">Edit</a>
 			</div>
-			<div class="option">
-			{% csrf_token %}	
+			<div class="option_selected">
+			{% csrf_token %}
 				<a href="{% url 'polls:edit' %}">Edit</a>
 			</div>
-			<div class="option_selected">
-			{% csrf_token %}	
+			<div class="option">
+			{% csrf_token %}
 				<a href="{% url 'polls:change_pw' %}">Change Password</a>
 			</div>
 			<div class="option">
-			{% csrf_token %}	
+			{% csrf_token %}
 				<a href="{% url 'polls:log_out' %}">Log Out</a>
 			</div>
 		</div>
 
 		<div class="body">
-			<form action="{% url 'polls:check_pw' %}" method="POST">
+			<form action="{% url 'polls:save_changes' %}" method="POST">
 			{% csrf_token %}	
 				<div class="fheader">
-					<h2>Change password</h2>	
+					<h2>Edit</h2>	
 				</div>
 				<div class="div1">
 				    <div class="div1a">
-					    Current password: 
+					    Password: 
 				    </div>
-				<input type="password" class="placeholder" name="Old_pw" placeholder="Current password"><br>
+				<input type="password" class="placeholder" name="Password" placeholder="Current password"><br>
+			    </div>
+				<div class="div1">
+				    <div class="div1a">
+					    First name: 
+				    </div>
+				<input type="text" class="placeholder" name="Firstname" placeholder="{{ user.get_firstname }}"><br>
 			    </div>
 			    <div class="div1">
 				    <div class="div1a">
-					    New password: 
+					    Last name: 
 				    </div>
-				<input type="password" class="placeholder" name="New_pw" placeholder="New password"><br>
+				<input type="text" class="placeholder" name="Lastname" placeholder="{{ user.get_lastname }}"><br>
 			    </div>
 			    <div class="div1">
 				    <div class="div1a">
-					    New password (again): 
+					    Email: 
 				    </div>
-				<input type="password" class="placeholder" name="New_pw1" placeholder="New password"><br>
+				<input type="text" class="placeholder" name="Email" placeholder="{{ user.get_email }}"><br>
 			    </div>
-			    <input type="submit" class="button" value="Save password" name="save password">Save password</input>
-			</form>
+			    <input type="submit" class="button" value="Save changes" name="save changes"></input>
+			   </form>
 		</div>
 	</body>
 </html>

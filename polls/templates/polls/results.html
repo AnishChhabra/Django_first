@@ -7,6 +7,26 @@
 
 		<div class="header">
 			<span id="title">PoLLsApp</span>
+			<span id="username">{{ user.get_username }}</span>
+		</div>
+
+		<div class="menu">
+			<div class="option">
+			{% csrf_token %}
+				<a href="{% url 'polls:index' %}">Edit</a>
+			</div>
+			<div class="option">
+			{% csrf_token %}
+				<a href="{% url 'polls:edit' %}">Edit</a>
+			</div>
+			<div class="option">
+			{% csrf_token %}
+				<a href="{% url 'polls:change_pw' %}">Change Password</a>
+			</div>
+			<div class="option">
+			{% csrf_token %}
+				<a href="{% url 'polls:log_out' %}">Log Out</a>
+			</div>
 		</div>
 
 		<div class="body">
@@ -16,6 +36,7 @@
 			    <li>{{ choice.choice_text }} -- {{ choice.votes }} vote{{ choice.votes|pluralize }}</li>
 			{% endfor %}
 			</ul>
+			{% csrf_token %}
 			<a href="{% url 'polls:detail' question.id %}">Vote again?</a>
 		</div>
 

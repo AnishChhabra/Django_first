@@ -90,7 +90,9 @@ def check_pw(request):
     old_pw = request.POST['Old_pw']
     new_pw = request.POST['New_pw']
     new_pw1 = request.POST['New_pw1']
-    if old_pw != password:
+    user = request.user
+
+    if authenticate(username=user.username, password=old_pw) is None:
         return render(request, 'polls/change_pw.html')
     elif new_pw != new_pw1:
         return render(request, 'polls/change_pw.html')
@@ -101,6 +103,33 @@ def check_pw(request):
         user.save()
         return HttpResponseRedirect(reverse('polls:index'))
 
+@login_required
+def edit(request):
+    return render(request, 'polls/edit.html')
+
+@login_required
+def save_changes(request):
+    firstname = request.POST['Firstname']
+    lastname = request.POST['Lastname']
+    email = request.POST['Email']
+    password = request.POST['Password']
+    user = request.user
+
+    if authenticate(username=user.username, password=old_pw) is None:
+        return render(request, 'polls/edit.html')
+    else:
+        if firstname is not None:
+            user.firstname = firstname
+        if lastname is not None:
+            user.lastname = lastname
+        if email is not None:
+            user.email = email
+        
+        user.save()
+        return HttpResponseRedirect(reverse('polls:index'))
+
+
+@login_required
 def log_out(request):
     logout(request)
     return HttpResponseRedirect(reverse('polls:login'))
