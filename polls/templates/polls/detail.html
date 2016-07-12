@@ -5,6 +5,7 @@
 
 		<link rel="stylesheet" type="text/css" href="{% static 'polls/css/detail.css' %}">
 
+        {% if user.is_authenticated %}
 		<div class="header">
 			<span id="title">PoLLsApp</span>
 			<span id="username">{{ user.get_username }}</span>
@@ -12,28 +13,27 @@
 
 		<div class="menu">
 			<div class="option">
-			{% csrf_token %}
-				<a href="{% url 'polls:index' %}">Edit</a>
+				<a href="{% url 'polls:index' %}">Index</a>
 			</div>
 			<div class="option">
-			{% csrf_token %}
 				<a href="{% url 'polls:edit' %}">Edit</a>
 			</div>
 			<div class="option">
-			{% csrf_token %}
 				<a href="{% url 'polls:change_pw' %}">Change Password</a>
 			</div>
 			<div class="option">
-			{% csrf_token %}
 				<a href="{% url 'polls:log_out' %}">Log Out</a>
 			</div>
 		</div>
 
 		<div class="body">
+		    {% if error_message %}
+		        <p class="error_message"><strong>{{ error_message }}</strong></p>
+		    {% endif %}
+			{% if message %}
+			    <p class="message"><strong>{{ message }}</strong></p>
+			{% endif %}
 			<h2 id="question">{{ question.question_text }}</h2>
-
-			{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
-
 			<form action="{% url 'polls:vote' question.id %}" method="post">
 			{% csrf_token %}
 			{% for choice in question.choice_set.all %}
@@ -45,5 +45,8 @@
 			<input type="submit" name="Submit" value="Vote" class="submit"/>
 			</form>
 		</div>
+		{% else %}
+		<p class="class1">You are not logged in. Login <a href="/polls/login">here</a>.</p>
+		{% endif %}
 	</body>
 </html>

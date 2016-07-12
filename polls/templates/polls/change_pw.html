@@ -12,19 +12,15 @@
 
 		<div class="menu">
 			<div class="option">
-			{% csrf_token %}	
-				<a href="{% url 'polls:index' %}">Edit</a>
+				<a href="{% url 'polls:index' %}">Index</a>
 			</div>
 			<div class="option">
-			{% csrf_token %}	
 				<a href="{% url 'polls:edit' %}">Edit</a>
 			</div>
 			<div class="option_selected">
-			{% csrf_token %}	
 				<a href="{% url 'polls:change_pw' %}">Change Password</a>
 			</div>
 			<div class="option">
-			{% csrf_token %}	
 				<a href="{% url 'polls:log_out' %}">Log Out</a>
 			</div>
 		</div>
@@ -35,6 +31,12 @@
 				<div class="fheader">
 					<h2>Change password</h2>	
 				</div>
+				{% if error_message %}
+		        <p class="error_message"><strong>{{ error_message }}</strong></p>
+		    {% endif %}
+			{% if message %}
+			    <p class="message"><strong>{{ message }}</strong></p>
+			{% endif %}
 				<div class="div1">
 				    <div class="div1a">
 					    Current password: 
@@ -53,7 +55,7 @@
 				    </div>
 				<input type="password" class="placeholder" name="New_pw1" placeholder="New password"><br>
 			    </div>
-			    <input type="submit" class="button" value="Save password" name="save password">Save password</input>
+			    <input type="submit" class="button" value="Save password" name="save password"></input>
 			</form>
 		</div>
 	</body>

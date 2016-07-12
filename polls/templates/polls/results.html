@@ -12,31 +12,32 @@
 
 		<div class="menu">
 			<div class="option">
-			{% csrf_token %}
-				<a href="{% url 'polls:index' %}">Edit</a>
+				<a href="{% url 'polls:index' %}">Index</a>
 			</div>
 			<div class="option">
-			{% csrf_token %}
 				<a href="{% url 'polls:edit' %}">Edit</a>
 			</div>
 			<div class="option">
-			{% csrf_token %}
 				<a href="{% url 'polls:change_pw' %}">Change Password</a>
 			</div>
 			<div class="option">
-			{% csrf_token %}
 				<a href="{% url 'polls:log_out' %}">Log Out</a>
 			</div>
 		</div>
 
 		<div class="body">
+		    {% if error_message %}
+		        <p class="error_message"><strong>{{ error_message }}</strong></p>
+		    {% endif %}
+			{% if message %}
+			    <p class="message"><strong>{{ message }}</strong></p>
+			{% endif %}
 			<h2 id="question">{{ question.question_text }}</h2>
 			<ul>
 			{% for choice in question.choice_set.all %}
 			    <li>{{ choice.choice_text }} -- {{ choice.votes }} vote{{ choice.votes|pluralize }}</li>
 			{% endfor %}
 			</ul>
-			{% csrf_token %}
 			<a href="{% url 'polls:detail' question.id %}">Vote again?</a>
 		</div>
 

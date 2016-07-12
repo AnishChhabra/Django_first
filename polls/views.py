@@ -55,12 +55,30 @@ def create_user(request):
     username = request.POST['Username']
     email = request.POST['Email']
     password = request.POST['Password']
-    # Create a new user.
-    user = User.objects.create_user(username, email, password)
-    user.firstname = firstname
-    user.lastname = lastname
-    user.save()
-    return HttpResponseRedirect(reverse('polls:index'))
+    password1 = request.POST['Password1']
+    if firstname is None:
+        return render(request, 'polls/signup.html/'),
+        {'error_message':'First name is required.'}
+    elif username is None:
+        return render(request, 'polls/signup.html/'),
+        {'error_message':'Username is required.'}
+    elif email is None:
+        return render(request, 'polls/signup.html/'),
+        {'error_message':'Email is required.'}
+    elif password or password1 is None:
+        return render(request, 'polls/signup.html/'),
+        {'error_message':'Password is required.'}
+    elif password != password1:
+        return render(request, 'polls/signup.html/'),
+        {'error_message':'Passwords do not match.'}
+    else:
+        # Create a new user.
+        user = User.objects.create_user(username, email, password)
+        user.firstname = firstname
+        user.lastname = lastname
+        user.save()
+        return HttpResponseRedirect(reverse('polls:index')),
+        {'message':'Welcome to PollsApp!'}
 
 def user_auth(request):
     username = request.POST['Username']
@@ -68,12 +86,15 @@ def user_auth(request):
     user = authenticate(username=username, password=password)
 
     if user is None:
-        return HttpResponse("Incorrect username or password.")
+        return render(request, 'polls/login.html/',
+        {'error_message':"Incorrect username or password."})
     elif user.is_active:
         login(request, user)
-        return HttpResponseRedirect(reverse('polls:index'))
+        return HttpResponseRedirect(reverse('polls:index'),
+        {'message':'Welcome to PollsApp!'})
     else:
-        return HttpResponse("The account has been disabled.")
+        return render(request, 'polls/login.html/',
+        {'error_message':"The account has been disabled."})
 
 def login(request):
     return render(request, 'polls/login.html/')
@@ -92,16 +113,23 @@ def check_pw(request):
     new_pw1 = request.POST['New_pw1']
     user = request.user
 
-    if authenticate(username=user.username, password=old_pw) is None:
-        return render(request, 'polls/change_pw.html')
+    if old_pw or new_pw or new_pw1 is None:
+        return render(request, 'polls/change_pw.html/'),
+        {'error_message':'Password is required.'}
+    elif authenticate(username=user.username, password=old_pw) is None:
+        return render(request, 'polls/change_pw.html',
+        {'error_message':'Incorrect password.'})
     elif new_pw != new_pw1:
-        return render(request, 'polls/change_pw.html')
+        return render(request, 'polls/change_pw.html',
+        {'error_message':'The passwords do not match.'})
     elif old_pw == new_pw:
-        return render(request, 'polls/change_pw.html')
+        return render(request, 'polls/change_pw.html',
+        {'error_message':'The new password is same as the existing one.'})
     else:
         user.set_password(new_pw)
         user.save()
-        return HttpResponseRedirect(reverse('polls:index'))
+        return HttpResponseRedirect(reverse('polls:index'),
+        {'message':'Password changed successfully!'})
 
 @login_required
 def edit(request):
@@ -115,8 +143,9 @@ def save_changes(request):
     password = request.POST['Password']
     user = request.user
 
-    if authenticate(username=user.username, password=old_pw) is None:
-        return render(request, 'polls/edit.html')
+    if authenticate(username=user.username, password=password) is None:
+        return render(request, 'polls/edit.html',
+        {'error_message':'Incorrect password.'})
     else:
         if firstname is not None:
             user.firstname = firstname
@@ -126,13 +155,14 @@ def save_changes(request):
             user.email = email
         
         user.save()
-        return HttpResponseRedirect(reverse('polls:index'))
+        return HttpResponseRedirect(reverse('polls:index'),
+        {'message':'Changes saved.'})
 
 
 @login_required
 def log_out(request):
     logout(request)
-    return HttpResponseRedirect(reverse('polls:login'))
+    return HttpResponseRedirect(reverse('polls/login.html'))
 
 
 # Create your views here.
