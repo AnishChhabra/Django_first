@@ -51,42 +51,46 @@ def vote(request, question_id):
         return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))
 
 def create_user(request):
+    is_user = False
+
     if request.method == 'POST':
         form = SignUpForm(request.POST)
+        form1 = LoginForm(request.POST)
 
         if form.is_valid():
             firstname = form.cleaned_data['Firstname']
             lastname = form.cleaned_data['Lastname']
-            username = form.cleaned_data['Username']
+            username = form1.cleaned_data['username']
             email = form.cleaned_data['Email']
-            password = form.cleaned_data['Password']
+            password = form1.cleaned_data['password']
             password1 = form.cleaned_data['Password1']
             if firstname is None:
-                return render(request, 'polls/signup.html/'),
-                {'error_message':'First name is required.'}
+                return render(request, 'polls/signup.html/',
+                {'error_message':'First name is required.'})
             elif username is None:
-                return render(request, 'polls/signup.html/'),
-                {'error_message':'Username is required.'}
+                return render(request, 'polls/signup.html/',
+                {'error_message':'Username is required.'})
             elif email is None:
-                return render(request, 'polls/signup.html/'),
-                {'error_message':'Email is required.'}
+                return render(request, 'polls/signup.html/',
+                {'error_message':'Email is required.'})
             elif password or password1 is None:
-                return render(request, 'polls/signup.html/'),
-                {'error_message':'Password is required.'}
+                return render(request, 'polls/signup.html/',
+                {'error_message':'Password is required.'})
             elif password != password1:
-                return render(request, 'polls/signup.html/'),
-                {'error_message':'Passwords do not match.'}
+                return render(request, 'polls/signup.html/',
+                {'error_message':'Passwords do not match.'})
             else:
                 # Create a new user.
                 user = form.save()
                 user.set_password(user.password)
                 user.save()
+                is_user = True
 
                 return HttpResponseRedirect(reverse('polls:index')),
                 {'message':'Welcome to PollsApp!'}
     else:
         form = SignUpForm()
-    return render(request, 'polls/signup.html', {'form':form, 'registered':registered})
+    return render(request, 'polls/signup.html', {'form':form, 'is_user':is_user})
 
 
 def user_auth(request):
@@ -94,8 +98,8 @@ def user_auth(request):
         form = LoginForm(request.POST)
 
         if form.is_valid():
-            username = form.cleaned_data['Username']
-            password = form.cleaned_data['Password']
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
             user = authenticate(username=username, password=password)
 
             if user is None:

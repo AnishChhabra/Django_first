@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 
-from .models import MyUser, MyUserLogin, MyUserCheck_pw, MyUserEdit
+from .models import MyUser, MyUserCheck_pw, MyUserEdit
 
 class SignUpForm(forms.ModelForm):
 	
@@ -10,15 +10,15 @@ class SignUpForm(forms.ModelForm):
 
 	class Meta:
 		model = MyUser
-		fields = ['Firstname', 'Lastname', 'Username', 'Email', 'Password', 'Password1']
+		fields = ['Firstname', 'Lastname', 'Email', 'Password1']
 		
 class LoginForm(forms.ModelForm):
 	
 	Password = forms.CharField(widget=forms.PasswordInput())
 	
 	class Meta:
-		model = MyUserLogin
-		fields = ['Username', 'Password']
+		model = User
+		fields = ['username', 'password']
 
 class Check_pwForm(forms.ModelForm):
 	
