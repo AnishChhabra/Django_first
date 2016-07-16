@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+	<body>
+		{% load staticfiles %}
+
+		<link rel="stylesheet" type="text/css" href="{% static 'polls/css/change_pw.css' %}"/>
+
+		<div class="header">
+			<span id="title">PoLLsApp</span>
+			<span id="username">{{ user.get_username }}</span>
+		</div>
+
+		<div class="menu">
+			<div class="option">
+				<a href="{% url 'polls:index' %}">Index</a>
+			</div>
+			<div class="option">
+				<a href="{% url 'polls:edit' %}">Edit</a>
+			</div>
+			<div class="option_selected">
+				<a href="{% url 'polls:change_pw' %}">Change Password</a>
+			</div>
+			<div class="option">
+				<a href="{% url 'polls:log_out' %}">Log Out</a>
+			</div>
+		</div>
+
+		<div class="body">
+			<form action="{% url 'polls:check_pw' %}" method="POST">
+			{% csrf_token %}	
+				<div class="fheader">
+					<h2>Change password</h2>	
+				</div>
+		    {% if error_message %}
+		        <p class="error_message"><strong>{{ error_message }}</strong></p>
+		    {% endif %}
+			{% if message %}
+			    <p class="message"><strong>{{ message }}</strong></p>
+			{% endif %}
+				<div class="div1">
+				    <div class="div1a">
+					    Current password: 
+				    </div>
+				<input type="password" class="placeholder" name="Old_pw" placeholder="Current password"><br>
+			    </div>
+			    <div class="div1">
+				    <div class="div1a">
+					    New password: 
+				    </div>
+				<input type="password" class="placeholder" name="New_pw" placeholder="New password"><br>
+			    </div>
+			    <div class="div1">
+				    <div class="div1a">
+					    New password (again): 
+				    </div>
+				<input type="password" class="placeholder" name="New_pw1" placeholder="New password"><br>
+			    </div>
+			    <input type="submit" class="button" value="Save password" name="save password"></input>
+			</form>
+		</div>
+	</body>
+</html>

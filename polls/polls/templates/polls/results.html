@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+	<body>
+		{% load staticfiles %}
+
+		<link rel="stylesheet" type="text/css" href="{% static 'polls/css/results.css' %}"/>
+
+		<div class="header">
+			<span id="title">PoLLsApp</span>
+			<span id="username">{{ user.get_username }}</span>
+		</div>
+
+		<div class="menu">
+			<div class="option">
+				<a href="{% url 'polls:index' %}">Index</a>
+			</div>
+			<div class="option">
+				<a href="{% url 'polls:edit' %}">Edit</a>
+			</div>
+			<div class="option">
+				<a href="{% url 'polls:change_pw' %}">Change Password</a>
+			</div>
+			<div class="option">
+				<a href="{% url 'polls:log_out' %}">Log Out</a>
+			</div>
+		</div>
+
+		<div class="body">
+		    {% if error_message %}
+		        <p class="error_message"><strong>{{ error_message }}</strong></p>
+		    {% endif %}
+			{% if message %}
+			    <p class="message"><strong>{{ message }}</strong></p>
+			{% endif %}
+			<h2 id="question">{{ question.question_text }}</h2>
+			<ul>
+			{% for choice in question.choice_set.all %}
+			    <li>{{ choice.choice_text }} -- {{ choice.votes }} vote{{ choice.votes|pluralize }}</li>
+			{% endfor %}
+			</ul>
+			<a href="{% url 'polls:detail' question.id %}">Vote again?</a>
+		</div>
+
+	</body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+	<body>
+		{% load staticfiles %}
+
+		<link rel="stylesheet" type="text/css" href="{% static 'polls/css/change_pw.css' %}"/>
+
+		<div class="header">
+			<span id="title">PoLLsApp</span>
+			<span id="username">{{ user.get_username }}</span>
+		</div>
+
+		<div class="menu">
+			<div class="option">
+				<a href="{% url 'polls:index' %}">Index</a>
+			</div>
+			<div class="option_selected">
+				<a href="{% url 'polls:edit' %}">Edit</a>
+			</div>
+			<div class="option">
+				<a href="{% url 'polls:change_pw' %}">Change Password</a>
+			</div>
+			<div class="option">
+				<a href="{% url 'polls:log_out' %}">Log Out</a>
+			</div>
+		</div>
+
+		<div class="body">
+			<form action="{% url 'polls:save_changes' %}" method="POST">
+			{% csrf_token %}	
+				<div class="fheader">
+					<h2>Edit</h2>	
+				</div>
+			{% if error_message %}
+		        <p class="error_message"><strong>{{ error_message }}</strong></p>
+		    {% endif %}
+			{% if message %}
+			    <p class="message"><strong>{{ message }}</strong></p>
+			{% endif %}
+				<div class="div1">
+				    <div class="div1a">
+					    Password: 
+				    </div>
+				<input type="password" class="placeholder" name="Password" placeholder="Current password"><br>
+			    </div>
+				<div class="div1">
+				    <div class="div1a">
+					    First name: 
+				    </div>
+				<input type="text" class="placeholder" name="Firstname" placeholder="{{ user.get_firstname }}"><br>
+			    </div>
+			    <div class="div1">
+				    <div class="div1a">
+					    Last name: 
+				    </div>
+				<input type="text" class="placeholder" name="Lastname" placeholder="{{ user.get_lastname }}"><br>
+			    </div>
+			    <div class="div1">
+				    <div class="div1a">
+					    Email: 
+				    </div>
+				<input type="text" class="placeholder" name="Email" placeholder="{{ user.get_email }}"><br>
+			    </div>
+			    <input type="submit" class="button" value="Save changes" name="save changes"></input>
+			   </form>
+		</div>
+	</body>
+</html>

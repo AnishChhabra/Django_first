@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+	<body>
+		{% load staticfiles %}
+
+		<link rel="stylesheet" type="text/css" href="{% static 'polls/css/index.css' %}"/>
+    {% if user.is_authenticated %}
+		{% if latest_question_list %}
+		<div class="header">
+			<span id="title">PoLLsApp</span>
+			<span id="username">{{ user.get_username }}</span>
+		</div>
+
+		<div class="menu">
+			<div class="option_selected">
+				<a href="{% url 'polls:index' %}">Index</a>
+			</div>
+			<div class="option">
+				<a href="{% url 'polls:edit' %}">Edit</a>
+			</div>
+			<div class="option">
+				<a href="{% url 'polls:change_pw' %}">Change Password</a>
+			</div>
+			<div class="option">
+				<a href="{% url 'polls:log_out' %}">Log Out</a>
+			</div>
+		</div>
+
+		<div class="body">
+		    {% if error_message %}
+		        <p class="error_message"><strong>{{ error_message }}</strong></p>
+		    {% endif %}
+			{% if message %}
+			    <p class="message"><strong>{{ message }}</strong></p>
+			{% endif %}
+			<ul>
+			{% for question in latest_question_list %}
+				<div class="question">
+					<li><a href="{% url 'polls:detail' question.id %}">{{question.question_text}}</a></li>
+				</div>
+			{% endfor %}
+			</ul>
+		</div>
+
+		{% else %}
+			<p class="error">No polls are available.</p>
+		{% endif %}
+	{% else %}
+	    <p class="class1">You are not logged in. Login <a href="/polls/login">here</a>.</p>
+	{% endif %}
+	</body>
+</html>
