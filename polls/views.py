@@ -10,6 +10,7 @@ from django.contrib.auth.models import User, Permission
 
 from mysite import settings
 from .models import Question, Choice
+from .forms import *
 
 class IndexView(generic.ListView):
 
@@ -50,51 +51,71 @@ def vote(request, question_id):
         return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))
 
 def create_user(request):
-    firstname = request.POST['Firstname']
-    lastname = request.POST['Lastname']
-    username = request.POST['Username']
-    email = request.POST['Email']
-    password = request.POST['Password']
-    password1 = request.POST['Password1']
-    if firstname is None:
-        return render(request, 'polls/signup.html/'),
-        {'error_message':'First name is required.'}
-    elif username is None:
-        return render(request, 'polls/signup.html/'),
-        {'error_message':'Username is required.'}
-    elif email is None:
-        return render(request, 'polls/signup.html/'),
-        {'error_message':'Email is required.'}
-    elif password or password1 is None:
-        return render(request, 'polls/signup.html/'),
-        {'error_message':'Password is required.'}
-    elif password != password1:
-        return render(request, 'polls/signup.html/'),
-        {'error_message':'Passwords do not match.'}
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+
+        if form.is_valid():
+            firstname = form.cleaned_data['Firstname']
+            lastname = form.cleaned_data['Lastname']
+            username = form.cleaned_data['Username']
+            email = form.cleaned_data['Email']
+            password = form.cleaned_data['Password']
+            password1 = form.cleaned_data['Password1']
+            if firstname is None:
+                return render(request, 'polls/signup.html/'),
+                {'error_message':'First name is required.'}
+            elif username is None:
+                return render(request, 'polls/signup.html/'),
+                {'error_message':'Username is required.'}
+            elif email is None:
+                return render(request, 'polls/signup.html/'),
+                {'error_message':'Email is required.'}
+            elif password or password1 is None:
+                return render(request, 'polls/signup.html/'),
+                {'error_message':'Password is required.'}
+            elif password != password1:
+                return render(request, 'polls/signup.html/'),
+                {'error_message':'Passwords do not match.'}
+            else:
+                # Create a new user.
+                user = form.save()
+                user.set_password(user.password)
+                user.save()
+
+                return HttpResponseRedirect(reverse('polls:index')),
+                {'message':'Welcome to PollsApp!'}
     else:
-        # Create a new user.
-        user = User.objects.create_user(username, email, password)
-        user.firstname = firstname
-        user.lastname = lastname
-        user.save()
-        return HttpResponseRedirect(reverse('polls:index')),
-        {'message':'Welcome to PollsApp!'}
+        form = SignUpForm()
+    return render(request, 'polls/signup.html', {'form':form, 'registered':registered})
+
 
 def user_auth(request):
-    username = request.POST['Username']
-    password = request.POST['Password']
-    user = authenticate(username=username, password=password)
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
 
-    if user is None:
-        return render(request, 'polls/login.html/',
-        {'error_message':"Incorrect username or password."})
-    elif user.is_active:
-        login(request, user)
-        return HttpResponseRedirect(reverse('polls:index'),
-        {'message':'Welcome to PollsApp!'})
+        if form.is_valid():
+            username = form.cleaned_data['Username']
+            password = form.cleaned_data['Password']
+            user = authenticate(username=username, password=password)
+
+            if user is None:
+                return render(request, 'polls/login.html/',
+                {'error_message':"Incorrect username or password."})
+            elif user.is_active:
+                login(request, user)
+                return HttpResponseRedirect(reverse('polls:index'),
+                {'message':'Welcome to PollsApp!'})
+            else:
+                return render(request, 'polls/login.html/',
+                {'error_message':"The account has been disabled."})
+        else:
+            return render(request, 'polls/login.html',
+            {'error_message':'The form is not valid.'})
     else:
-        return render(request, 'polls/login.html/',
-        {'error_message':"The account has been disabled."})
+        form = LoginForm()
+
+    return render(request, 'polls/login.html', {'form':form})
+
 
 def login(request):
     return render(request, 'polls/login.html/')
@@ -108,28 +129,36 @@ def change_pw(request):
 
 @login_required
 def check_pw(request):
-    old_pw = request.POST['Old_pw']
-    new_pw = request.POST['New_pw']
-    new_pw1 = request.POST['New_pw1']
-    user = request.user
+    if request.method == 'POST':
+        form = Check_pwForm(request.POST)
 
-    if old_pw or new_pw or new_pw1 is None:
-        return render(request, 'polls/change_pw.html/'),
-        {'error_message':'Password is required.'}
-    elif authenticate(username=user.username, password=old_pw) is None:
-        return render(request, 'polls/change_pw.html',
-        {'error_message':'Incorrect password.'})
-    elif new_pw != new_pw1:
-        return render(request, 'polls/change_pw.html',
-        {'error_message':'The passwords do not match.'})
-    elif old_pw == new_pw:
-        return render(request, 'polls/change_pw.html',
-        {'error_message':'The new password is same as the existing one.'})
+        if form.is_valid():
+            old_pw = form.cleaned_data['Old_pw']
+            new_pw = form.cleaned_data['New_pw']
+            new_pw1 = form.cleaned_data['New_pw1']
+
+            if old_pw or new_pw or new_pw1 is None:
+                return render(request, 'polls/change_pw.html/'),
+                {'error_message':'Password is required.'}
+            elif authenticate(username=user.username, password=old_pw) is None:
+                return render(request, 'polls/change_pw.html',
+                {'error_message':'Incorrect password.'})
+            elif new_pw != new_pw1:
+                return render(request, 'polls/change_pw.html',
+                {'error_message':'The passwords do not match.'})
+            elif old_pw == new_pw:
+                return render(request, 'polls/change_pw.html',
+                {'error_message':'The new password is same as the existing one.'})
+            else:
+                user.set_password(new_pw)
+                user.save()
+                return HttpResponseRedirect(reverse('polls:index'),
+                {'message':'Password changed successfully!'})
+    
     else:
-        user.set_password(new_pw)
-        user.save()
-        return HttpResponseRedirect(reverse('polls:index'),
-        {'message':'Password changed successfully!'})
+        form = Check_pwForm()
+
+    return render(request, 'polls/change_pw.html', {'form':form})
 
 @login_required
 def edit(request):
@@ -137,27 +166,35 @@ def edit(request):
 
 @login_required
 def save_changes(request):
-    firstname = request.POST['Firstname']
-    lastname = request.POST['Lastname']
-    email = request.POST['Email']
-    password = request.POST['Password']
-    user = request.user
+    if request.method == 'POST':
+        form = EditForm(request.POST)
 
-    if authenticate(username=user.username, password=password) is None:
-        return render(request, 'polls/edit.html',
-        {'error_message':'Incorrect password.'})
-    else:
-        if firstname is not None:
-            user.firstname = firstname
-        if lastname is not None:
-            user.lastname = lastname
-        if email is not None:
-            user.email = email
+        if form.is_valid:
+            password = form.cleaned_data['Password']
+            firstname = form.cleaned_data['Firstname']
+            lastname = form.cleaned_data['Lastname']
+            email = form.cleaned_data['Email']
+            user = request.user
+
+            if authenticate(username=user.username, password=password) is None:
+                return render(request, 'polls/edit.html',
+                {'error_message':'Incorrect password.'})
+            else:
+                if firstname is not None:
+                    user.firstname = firstname
+                if lastname is not None:
+                    user.lastname = lastname
+                if email is not None:
+                    user.email = email
         
-        user.save()
-        return HttpResponseRedirect(reverse('polls:index'),
-        {'message':'Changes saved.'})
+                user.save()
+                return HttpResponseRedirect(reverse('polls:index'),
+                {'message':'Changes saved.'})
 
+    else:
+        form = EditForm()
+
+    return render(request, 'polls/edit.html')
 
 @login_required
 def log_out(request):

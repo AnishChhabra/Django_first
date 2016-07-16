@@ -33,21 +33,43 @@ class Choice(models.Model):
         return self.choice_text
 
 class MyUser(models.Model):
-    firstname = models.CharField(max_length=30)
-    lastname = models.CharField(max_length=30)
-    email = models.EmailField(max_length=30)
-    image = models.ImageField(upload_to='dp', blank=True)
-    username = models.CharField(max_length=30)
-    password = models.CharField(widget=forms.PasswordInput, max_length=30)
+
+    Firstname = models.CharField(max_length=30)
+    Lastname = models.CharField(max_length=30)
+    Email = models.EmailField(max_length=30)
+    Username = models.CharField(max_length=30)
+    Password = models.CharField(max_length=30)
 
     def __str__(self):
-        return self.username
+        return self.Username
 
 class MyUserLogin(models.Model):
-    username = models.CharField(max_length=30)
-    password = models.CharField(widget=forms.PasswordInput, max_length=30)
+
+    Username = models.CharField(max_length=30)
+    Password = models.CharField(max_length=30)
+   
     def __str__(self):
-        return self.username
+        return self.Username
+
+class MyUserCheck_pw(models.Model):
+
+    user = models.OneToOneField(MyUserLogin)
+    Old_pw = models.CharField(max_length=30)    
+    New_pw = models.CharField(max_length=30)
+    New_pw1 = models.CharField(max_length=30)
+    def __str__(self):
+        return self.user.Username
+
+class MyUserEdit(models.Model):
+
+    user = models.OneToOneField(MyUserLogin)
+    Password = models.CharField(max_length=30)
+    Firstname = models.CharField(max_length=30)
+    Lastname = models.CharField(max_length=30)
+    Email = models.EmailField(max_length=30)
+    def __str__(self):
+        return self.user.Username
+
 
 
 
