@@ -9,7 +9,7 @@ class SignUpForm(forms.ModelForm):
 
 	class Meta:
 		model = MyUser
-		fields = ['Firstname', 'Lastname', 'Email', 'Password']
+		fields = ('Firstname', 'Lastname', 'Email', 'Password')
 		
 class LoginForm(forms.ModelForm):
 	
@@ -17,7 +17,7 @@ class LoginForm(forms.ModelForm):
 	
 	class Meta:
 		model = User
-		fields = ['username', 'password']
+		fields = ('username', 'password')
 
 class Change_pwForm(forms.ModelForm):
 	
@@ -27,7 +27,7 @@ class Change_pwForm(forms.ModelForm):
 	
 	class Meta:
 		model = MyUserChange_pw
-		fields = ['Old_pw', 'New_pw', 'New_pw1']
+		fields = ('Old_pw', 'New_pw', 'New_pw1')
 
 class EditForm(forms.ModelForm):
 	
@@ -35,4 +35,4 @@ class EditForm(forms.ModelForm):
 	
 	class Meta:
 		model = MyUserEdit
-		fields = ['Password', 'Firstname', 'Lastname', 'Email']
+		fields = ('Password', 'Firstname', 'Lastname', 'Email')

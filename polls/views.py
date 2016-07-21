@@ -5,7 +5,7 @@ from django.utils import timezone
 from django.views import generic
 
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth. decorators import login_required
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User, Permission
 
 from mysite import settings
@@ -54,8 +54,8 @@ def signup(request):
     is_user = False
 
     if request.method == 'POST':
-        form = SignUpForm(request.POST)
-        form1 = LoginForm(request.POST)
+        form = SignUpForm(data=request.POST)
+        form1 = LoginForm(data=request.POST)
 
         if form.is_valid() and form1.is_valid():
             firstname = form.cleaned_data['Firstname']
