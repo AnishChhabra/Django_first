@@ -21,14 +21,6 @@ urlpatterns = [
     	views.vote,
     	name='vote'
     ),
-    url(r'^create_user/$',
-    	views.create_user,
-    	name='create_user'
-    ),
-    url(r'^user_auth/$',
-    	views.user_auth,
-    	name='user_auth'
-    ),
     url(r'^login/$',
     	views.login,
     	name='login'
@@ -41,17 +33,9 @@ urlpatterns = [
     	views.change_pw,
     	name='change_pw'
     ),
-    url(r'^check_pw/$',
-    	views.check_pw,
-    	name='check_pw'
-    ),
     url(r'^edit/$',
     	views.edit,
     	name='edit'
-    ),
-    url(r'^save_changes/$',
-    	views.save_changes,
-    	name='save_changes'
     ),
     url(r'^log_out/$',
     	views.log_out,

@@ -39,12 +39,12 @@ class MyUser(models.Model):
     Firstname = models.CharField(max_length=30)
     Lastname = models.CharField(max_length=30)
     Email = models.EmailField(max_length=30)
-    Password1 = models.CharField(max_length=30)
+    Password = models.CharField(max_length=30)
 
     def __str__(self):
         return self.user.username
 
-class MyUserCheck_pw(models.Model):
+class MyUserChange_pw(models.Model):
 
     user = models.OneToOneField(User)
     Old_pw = models.CharField(max_length=30)    

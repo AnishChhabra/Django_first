@@ -46,7 +46,7 @@
 			<p class="error">No polls are available.</p>
 		{% endif %}
 	{% else %}
-	    <p class="class1">You are not logged in. Login <a href="/polls/login">here</a>.</p>
+	    <p class="class1">You are not logged in. Login <a href="{% url 'polls:login' %}">here</a>.</p>
 	{% endif %}
 	</body>
 </html>

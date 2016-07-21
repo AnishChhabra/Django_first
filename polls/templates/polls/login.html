@@ -27,7 +27,7 @@
 		<p class="class1">Logged in as {{user.username}}</p>
 
         {% else %}
-		<form action="{% url 'polls:user_auth' %}" method="POST">
+		<form action="{% url 'polls:login' %}" method="POST">
 		    {% csrf_token %}
 			<div class="fheader">
 				<h2>Log In</h2>	
@@ -38,18 +38,7 @@
 			{% if message %}
 			    <p class="message"><strong>{{ message }}</strong></p>
 			{% endif %}
-			<div class="div1">
-				<div class="div1a">
-					Username: 
-				</div>
-				<input type="text" class="placeholder" name="Username" placeholder="Username"><br>
-			</div>
-			<div class="div1">
-				<div class="div1a">
-					Password: 
-				</div>
-				<input type="password" class="placeholder" name="Password" placeholder="Password"><br>
-			</div>	
+			{{form.as_p}}	
 			<input type="submit" class="button" value="Log In" name="login"></input>
 		</form>		
 		<div><a href="{% url 'polls:signup' %}">Don't have an account?</a></div>

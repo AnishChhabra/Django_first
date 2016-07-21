@@ -9,8 +9,8 @@ from django.contrib.auth. decorators import login_required
 from django.contrib.auth.models import User, Permission
 
 from mysite import settings
-from .models import Question, Choice
 from .forms import *
+from .models import *
 
 class IndexView(generic.ListView):
 
@@ -50,20 +50,20 @@ def vote(request, question_id):
         selected_choice.save()
         return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))
 
-def create_user(request):
+def signup(request):
     is_user = False
 
     if request.method == 'POST':
         form = SignUpForm(request.POST)
         form1 = LoginForm(request.POST)
 
-        if form.is_valid():
+        if form.is_valid() and form1.is_valid():
             firstname = form.cleaned_data['Firstname']
             lastname = form.cleaned_data['Lastname']
             username = form1.cleaned_data['username']
             email = form.cleaned_data['Email']
             password = form1.cleaned_data['password']
-            password1 = form.cleaned_data['Password1']
+            password1 = form.cleaned_data['Password']
             if firstname is None:
                 return render(request, 'polls/signup.html/',
                 {'error_message':'First name is required.'})
@@ -73,7 +73,7 @@ def create_user(request):
             elif email is None:
                 return render(request, 'polls/signup.html/',
                 {'error_message':'Email is required.'})
-            elif password or password1 is None:
+            elif password is None or password1 is None:
                 return render(request, 'polls/signup.html/',
                 {'error_message':'Password is required.'})
             elif password != password1:
@@ -81,19 +81,23 @@ def create_user(request):
                 {'error_message':'Passwords do not match.'})
             else:
                 # Create a new user.
-                user = form.save()
+                user = form1.save()
                 user.set_password(user.password)
                 user.save()
                 is_user = True
 
                 return HttpResponseRedirect(reverse('polls:index')),
                 {'message':'Welcome to PollsApp!'}
+
+#        else:
+#           print 'The form is not valid!'
     else:
         form = SignUpForm()
-    return render(request, 'polls/signup.html', {'form':form, 'is_user':is_user})
+        form1 = LoginForm()
+    return render(request, 'polls/signup.html', {'form':form,'form1':form1, 'is_user':is_user})
 
 
-def user_auth(request):
+def login(request):
     if request.method == 'POST':
         form = LoginForm(request.POST)
 
@@ -120,21 +124,10 @@ def user_auth(request):
 
     return render(request, 'polls/login.html', {'form':form})
 
-
-def login(request):
-    return render(request, 'polls/login.html/')
-
-def signup(request):
-    return render(request, 'polls/signup.html/')
-
 @login_required
 def change_pw(request):
-    return render(request, 'polls/change_pw.html/')
-
-@login_required
-def check_pw(request):
     if request.method == 'POST':
-        form = Check_pwForm(request.POST)
+        form = Change_pwForm(request.POST)
 
         if form.is_valid():
             old_pw = form.cleaned_data['Old_pw']
@@ -160,16 +153,12 @@ def check_pw(request):
                 {'message':'Password changed successfully!'})
     
     else:
-        form = Check_pwForm()
+        form = Change_pwForm()
 
     return render(request, 'polls/change_pw.html', {'form':form})
 
 @login_required
 def edit(request):
-    return render(request, 'polls/edit.html')
-
-@login_required
-def save_changes(request):
     if request.method == 'POST':
         form = EditForm(request.POST)
 
