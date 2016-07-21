@@ -54,8 +54,8 @@ def signup(request):
     is_user = False
 
     if request.method == 'POST':
-        form = SignUpForm(data=request.POST)
-        form1 = LoginForm(data=request.POST)
+        form = SignUpForm(request.POST)
+        form1 = LoginForm(request.POST)
 
         if form.is_valid() and form1.is_valid():
             firstname = form.cleaned_data['Firstname']
@@ -86,8 +86,8 @@ def signup(request):
                 user.save()
                 is_user = True
 
-                return HttpResponseRedirect(reverse('polls:index')),
-                {'message':'Welcome to PollsApp!'}
+                return render(request, 'polls/index.html',
+                {'message':'Welcome to PollsApp!'})
 
 #        else:
 #           print 'The form is not valid!'
