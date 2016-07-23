@@ -190,7 +190,7 @@ def edit(request):
 @login_required
 def log_out(request):
     logout(request)
-    return render(request, 'polls/log_in.html')
+    return HttpResponseRedirect(reverse('polls:index'))
 
 
 # Create your views here.
