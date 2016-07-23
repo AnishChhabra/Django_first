@@ -21,9 +21,9 @@ urlpatterns = [
     	views.vote,
     	name='vote'
     ),
-    url(r'^login/$',
-    	views.login,
-    	name='login'
+    url(r'^log_in/$',
+    	views.log_in,
+    	name='log_in'
     ),
     url(r'^signup/$',
     	 views.signup,

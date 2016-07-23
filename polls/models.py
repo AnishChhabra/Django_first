@@ -36,9 +36,7 @@ class Choice(models.Model):
 class MyUser(models.Model):
 
     user = models.OneToOneField(User)
-    Firstname = models.CharField(max_length=30)
-    Lastname = models.CharField(max_length=30)
-    Email = models.EmailField(max_length=30)
+    Username = models.CharField(max_length=30)
     Password = models.CharField(max_length=30)
 
     def __str__(self):

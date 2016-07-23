@@ -55,15 +55,14 @@ def signup(request):
 
     if request.method == 'POST':
         form = SignUpForm(request.POST)
-        form1 = LoginForm(request.POST)
 
-        if form.is_valid() and form1.is_valid():
-            firstname = form.cleaned_data['Firstname']
-            lastname = form.cleaned_data['Lastname']
-            username = form1.cleaned_data['username']
-            email = form.cleaned_data['Email']
-            password = form1.cleaned_data['password']
-            password1 = form.cleaned_data['Password']
+        if form.is_valid():
+            firstname = form.cleaned_data['first_name']
+            lastname = form.cleaned_data['last_name']
+            username = form.cleaned_data['username']
+            email = form.cleaned_data['email']
+            password = form.cleaned_data['password']
+#            password1 = form.cleaned_data['Password']
             if firstname is None:
                 return render(request, 'polls/signup.html/',
                 {'error_message':'First name is required.'})
@@ -73,15 +72,15 @@ def signup(request):
             elif email is None:
                 return render(request, 'polls/signup.html/',
                 {'error_message':'Email is required.'})
-            elif password is None or password1 is None:
-                return render(request, 'polls/signup.html/',
-                {'error_message':'Password is required.'})
-            elif password != password1:
-                return render(request, 'polls/signup.html/',
-                {'error_message':'Passwords do not match.'})
+#            elif password is None or password1 is None:
+ #               return render(request, 'polls/signup.html/',
+  #              {'error_message':'Password is required.'})
+   #         elif password != password1:
+    #            return render(request, 'polls/signup.html/',
+     #           {'error_message':'Passwords do not match.'})
             else:
                 # Create a new user.
-                user = form1.save()
+                user = form.save()
                 user.set_password(user.password)
                 user.save()
                 is_user = True
@@ -93,36 +92,35 @@ def signup(request):
 #           print 'The form is not valid!'
     else:
         form = SignUpForm()
-        form1 = LoginForm()
-    return render(request, 'polls/signup.html', {'form':form,'form1':form1, 'is_user':is_user})
+    return render(request, 'polls/signup.html', {'form':form, 'is_user':is_user})
 
 
-def login(request):
+def log_in(request):
     if request.method == 'POST':
         form = LoginForm(request.POST)
 
         if form.is_valid():
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password']
+            username = form.cleaned_data['Username']
+            password = form.cleaned_data['Password']
             user = authenticate(username=username, password=password)
 
             if user is None:
-                return render(request, 'polls/login.html/',
+                return render(request, 'polls/log_in.html/',
                 {'error_message':"Incorrect username or password."})
             elif user.is_active:
                 login(request, user)
                 return HttpResponseRedirect(reverse('polls:index'),
                 {'message':'Welcome to PollsApp!'})
             else:
-                return render(request, 'polls/login.html/',
+                return render(request, 'polls/log_in.html/',
                 {'error_message':"The account has been disabled."})
         else:
-            return render(request, 'polls/login.html',
+            return render(request, 'polls/log_in.html',
             {'error_message':'The form is not valid.'})
     else:
         form = LoginForm()
 
-    return render(request, 'polls/login.html', {'form':form})
+    return render(request, 'polls/log_in.html', {'form':form})
 
 @login_required
 def change_pw(request):
@@ -192,7 +190,7 @@ def edit(request):
 @login_required
 def log_out(request):
     logout(request)
-    return HttpResponseRedirect(reverse('polls/login.html'))
+    return render(request, 'polls/log_in.html')
 
 
 # Create your views here.

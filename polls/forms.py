@@ -3,21 +3,21 @@ from django.contrib.auth.models import User
 
 from .models import MyUser, MyUserChange_pw, MyUserEdit
 
-class SignUpForm(forms.ModelForm):
+class LoginForm(forms.ModelForm):
 	
 	Password = forms.CharField(widget=forms.PasswordInput())
 
 	class Meta:
 		model = MyUser
-		fields = ('Firstname', 'Lastname', 'Email', 'Password')
+		fields = ('Username', 'Password')
 		
-class LoginForm(forms.ModelForm):
+class SignUpForm(forms.ModelForm):
 	
 	password = forms.CharField(widget=forms.PasswordInput())
 	
 	class Meta:
 		model = User
-		fields = ('username', 'password')
+		fields = ('first_name', 'last_name', 'email', 'username', 'password')
 
 class Change_pwForm(forms.ModelForm):
 	
