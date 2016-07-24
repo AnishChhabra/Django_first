@@ -35,6 +35,9 @@
 			<h2 id="question">{{ question.question_text }}</h2>
 			<form action="{% url 'polls:vote' question.id %}" method="post">
 			{% csrf_token %}
+			{% if choice %}
+			<p class="message"><strong>You have already voted. {{choice.choice_text}}</strong></p>
+			{% else %}
 			{% for choice in question.choice_set.all %}
 			   <div class="choice">
 				    <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}" />
@@ -42,6 +45,7 @@
 			   </div>
 			{% endfor %}
 			<input type="submit" name="Submit" value="Vote" class="submit"/>
+			{% endif %}
 			</form>
 		</div>
 		{% else %}

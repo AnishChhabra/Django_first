@@ -9,7 +9,7 @@
 			<span id="title">PoLLsApp</span>
 		</div>
 
-		{% if is_user %}
+		{% if user.is_authenticated %}
 		<div class="menu">
 			<div class="option">
 				<a href="{% url 'polls:index' %}">Index</a>
@@ -25,7 +25,7 @@
 			</div>
 		</div>
 
-		<p class="class1">Hi {{user.username}}! You are already a user. Thank you for registering.</p>
+		<p class="class1">Hi {{user.username}}! You are already a user. Thank you for registesring.</p>
 
 		{% else %}
 

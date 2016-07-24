@@ -48,6 +48,7 @@ class MyUserChange_pw(models.Model):
     Old_pw = models.CharField(max_length=30)    
     New_pw = models.CharField(max_length=30)
     New_pw1 = models.CharField(max_length=30)
+
     def __str__(self):
         return self.user.username
 
@@ -58,7 +59,16 @@ class MyUserEdit(models.Model):
     Firstname = models.CharField(max_length=30)
     Lastname = models.CharField(max_length=30)
     Email = models.EmailField(max_length=30)
+    
     def __str__(self):
         return self.user.username
 
+class Voter(models.Model):
+
+    user = models.ForeignKey(User)
+    question = models.ForeignKey(Question)
+    choice = models.ForeignKey(Choice)
+    
+    def __str__(self):
+        return self.user.username
 # Create your models here.

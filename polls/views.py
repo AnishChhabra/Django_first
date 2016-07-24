@@ -38,6 +38,11 @@ class ResultsView(generic.DetailView):
 @login_required
 def vote(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
+    voter = Voter.objects.filter(question=question, user=request.user)
+    if voter:
+        choice = voter.choice
+        return render(request, 'polls/detail.html',
+        {'question':question, 'choice':choice, 'message':"You have already voted."})
     try:
         selected_choice = question.choice_set.get(pk=request.POST['choice'])
     except (KeyError, Choice.DoesNotExist):
@@ -48,6 +53,8 @@ def vote(request, question_id):
     else:
         selected_choice.votes += 1
         selected_choice.save()
+        voter = Voter(user=request.user,question=question,choice=selected_choice)
+        voter.save()
         return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))
 
 def signup(request):
@@ -135,21 +142,21 @@ def change_pw(request):
 
             if old_pw is None or new_pw is None or new_pw1 is None:
                 return render(request, 'polls/change_pw.html/',
-                {'error_message':'Password is required.'})
+                {'error_message':'Password is required.', 'form':form})
             elif authenticate(username=user.username, password=old_pw) is None:
                 return render(request, 'polls/change_pw.html',
-                {'error_message':'Incorrect password.'})
+                {'error_message':'Incorrect password.', 'form':form})
             elif new_pw != new_pw1:
                 return render(request, 'polls/change_pw.html',
-                {'error_message':'The passwords do not match.'})
+                {'error_message':'The passwords do not match.', 'form':form})
             elif old_pw == new_pw:
                 return render(request, 'polls/change_pw.html',
-                {'error_message':'The new password is same as the existing one.'})
+                {'error_message':'The new password is same as the existing one.', 'form':form})
             else:
                 user.set_password(new_pw)
                 user.save()
-                return HttpResponseRedirect(reverse('polls:index'),
-                {'message':'Password changed successfully!'})
+                return render(request, 'polls/change_pw.html',
+                {'message':'Password changed successfully!', 'form':form})
     
     else:
         form = Change_pwForm()
@@ -191,6 +198,4 @@ def edit(request):
 def log_out(request):
     logout(request)
     return HttpResponseRedirect(reverse('polls:log_in'))
-
-
 # Create your views here.
