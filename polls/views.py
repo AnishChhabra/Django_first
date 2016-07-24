@@ -38,11 +38,15 @@ class ResultsView(generic.DetailView):
 @login_required
 def vote(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
-    voter = Voter.objects.filter(question=question, user=request.user)
-    if voter:
+    try:
+        voter = Voter.objects.get(question=question, user=request.user)
         choice = voter.choice
         return render(request, 'polls/detail.html',
-        {'question':question, 'choice':choice, 'message':"You have already voted."})
+        {'question':question, 'choice':choice, 'is_voter':'true'})
+    
+    except Voter.DoesNotExist:
+        voter = None
+
     try:
         selected_choice = question.choice_set.get(pk=request.POST['choice'])
     except (KeyError, Choice.DoesNotExist):
@@ -51,10 +55,18 @@ def vote(request, question_id):
             'error_message': "You didn't select a choice.",
         })
     else:
-        selected_choice.votes += 1
-        selected_choice.save()
-        voter = Voter(user=request.user,question=question,choice=selected_choice)
-        voter.save()
+        if voter is not None:
+            choice.votes -= 1
+            choice.save()
+            selected_choice.votes += 1
+            selected_choice.save()
+            voter.choice = selected_choice
+            voter.save()
+        else:
+            selected_choice.votes += 1
+            selected_choice.save()
+            v = Voter(user=request.user,question=question,choice=selected_choice)
+            v.save()
         return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))
 
 def signup(request):

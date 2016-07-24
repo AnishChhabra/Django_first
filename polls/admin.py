@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Question, Choice, MyUser, MyUserChange_pw, MyUserEdit
+from .models import Question, Choice
 
 class ChoiceInLine(admin.TabularInline):
 	
@@ -20,7 +20,4 @@ class QuestionAdmin(admin.ModelAdmin):
 	search_fields = ['question_text']
 
 admin.site.register(Question, QuestionAdmin)
-admin.site.register(MyUser)
-admin.site.register(MyUserChange_pw)
-admin.site.register(MyUserEdit)
 # Register your models here.
