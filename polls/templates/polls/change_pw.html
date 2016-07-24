@@ -37,24 +37,7 @@
 			{% if message %}
 			    <p class="message"><strong>{{ message }}</strong></p>
 			{% endif %}
-				<div class="div1">
-				    <div class="div1a">
-					    Current password: 
-				    </div>
-				<input type="password" class="placeholder" name="Old_pw" placeholder="Current password"><br>
-			    </div>
-			    <div class="div1">
-				    <div class="div1a">
-					    New password: 
-				    </div>
-				<input type="password" class="placeholder" name="New_pw" placeholder="New password"><br>
-			    </div>
-			    <div class="div1">
-				    <div class="div1a">
-					    New password (again): 
-				    </div>
-				<input type="password" class="placeholder" name="New_pw1" placeholder="New password"><br>
-			    </div>
+			    {{ form.as_p }}
 			    <input type="submit" class="button" value="Save password" name="save password"></input>
 			</form>
 		</div>

@@ -5,12 +5,11 @@
 
 		<link rel="stylesheet" type="text/css" href="{% static 'polls/css/detail.css' %}">
 
-        {% if user.is_authenticated %}
 		<div class="header">
 			<span id="title">PoLLsApp</span>
 			<span id="username">{{ user.get_username }}</span>
 		</div>
-
+    {% if user.is_authenticated %}
 		<div class="menu">
 			<div class="option">
 				<a href="{% url 'polls:index' %}">Index</a>

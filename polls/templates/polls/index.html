@@ -4,13 +4,12 @@
 		{% load staticfiles %}
 
 		<link rel="stylesheet" type="text/css" href="{% static 'polls/css/index.css' %}"/>
-    {% if user.is_authenticated %}
 		{% if latest_question_list %}
 		<div class="header">
 			<span id="title">PoLLsApp</span>
 			<span id="username">{{ user.get_username }}</span>
 		</div>
-
+    {% if user.is_authenticated %}
 		<div class="menu">
 			<div class="option_selected">
 				<a href="{% url 'polls:index' %}">Index</a>

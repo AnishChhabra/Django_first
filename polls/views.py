@@ -106,17 +106,17 @@ def log_in(request):
 
             if user is None:
                 return render(request, 'polls/log_in.html/',
-                {'error_message':"Incorrect username or password."})
+                {'error_message':"Incorrect username or password.", 'form':LoginForm()})
             elif user.is_active:
                 login(request, user)
                 return HttpResponseRedirect(reverse('polls:index'),
                 {'message':'Welcome to PollsApp!'})
             else:
                 return render(request, 'polls/log_in.html/',
-                {'error_message':"The account has been disabled."})
+                {'error_message':"The account has been disabled.", 'form':LoginForm()})
         else:
             return render(request, 'polls/log_in.html',
-            {'error_message':'The form is not valid.'})
+            {'error_message':'The form is not valid.', 'form':LoginForm()})
     else:
         form = LoginForm()
 
@@ -131,10 +131,11 @@ def change_pw(request):
             old_pw = form.cleaned_data['Old_pw']
             new_pw = form.cleaned_data['New_pw']
             new_pw1 = form.cleaned_data['New_pw1']
+            user = request.user
 
-            if old_pw or new_pw or new_pw1 is None:
-                return render(request, 'polls/change_pw.html/'),
-                {'error_message':'Password is required.'}
+            if old_pw is None or new_pw is None or new_pw1 is None:
+                return render(request, 'polls/change_pw.html/',
+                {'error_message':'Password is required.'})
             elif authenticate(username=user.username, password=old_pw) is None:
                 return render(request, 'polls/change_pw.html',
                 {'error_message':'Incorrect password.'})
@@ -158,39 +159,38 @@ def change_pw(request):
 @login_required
 def edit(request):
     if request.method == 'POST':
-        form = EditForm(request.POST)
+#        form = EditForm(request.POST)
 
-        if form.is_valid:
-            password = form.cleaned_data['Password']
-            firstname = form.cleaned_data['Firstname']
-            lastname = form.cleaned_data['Lastname']
-            email = form.cleaned_data['Email']
-            user = request.user
+        password = request.POST['Password']
+        firstname = request.POST['Firstname']
+        lastname = request.POST['Lastname']
+        email = request.POST['Email']
+        user = request.user
 
-            if authenticate(username=user.username, password=password) is None:
-                return render(request, 'polls/edit.html',
-                {'error_message':'Incorrect password.'})
-            else:
-                if firstname is not None:
-                    user.firstname = firstname
-                if lastname is not None:
-                    user.lastname = lastname
-                if email is not None:
-                    user.email = email
+        if authenticate(username=user.username, password=password) is None:
+            return render(request, 'polls/edit.html',
+            {'error_message':'Incorrect password. Please verify your password to edit information.'})
+        else:
+            if firstname:
+                user.first_name = firstname
+            if lastname:
+                user.last_name = lastname
+            if email:
+                user.email = email
         
-                user.save()
-                return HttpResponseRedirect(reverse('polls:index'),
-                {'message':'Changes saved.'})
+            user.save()
+            return HttpResponseRedirect(reverse('polls:index'),
+           {'message':'Changes saved.'})
 
     else:
         form = EditForm()
 
-    return render(request, 'polls/edit.html')
+    return render(request, 'polls/edit.html', {'form':form})
 
 @login_required
 def log_out(request):
     logout(request)
-    return HttpResponseRedirect(reverse('polls:index'))
+    return HttpResponseRedirect(reverse('polls:log_in'))
 
 
 # Create your views here.
